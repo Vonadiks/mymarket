@@ -2,41 +2,67 @@ package ru.geekbrains.my.market.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.geekbrains.my.market.dto.ProductDto;
+import ru.geekbrains.my.market.model.Category;
 import ru.geekbrains.my.market.model.Product;
+import ru.geekbrains.my.market.services.CategoryService;
 import ru.geekbrains.my.market.services.ProductService;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/products")
 public class ProductController {
     private final ProductService productService;
+    private final CategoryService categoryService;
 
-    @GetMapping("/products/{id}")
-    public Product findById(@PathVariable Long id) {
-        return productService.findById(id);
+    @GetMapping("/{id}")
+    public ProductDto findById(@PathVariable Long id) {
+        return new ProductDto(productService.findById(id));
     }
 
 
-    @GetMapping("/products")
-    public List<Product> findAll() {
-        return productService.findAll();
-    }
-
-    @GetMapping("/products_page}")
-    public Page<Product> findPage(@RequestParam(name = "p") int pageIndex) {
+    @GetMapping
+    public Page<Product> findAll(@RequestParam(name = "p", defaultValue = "1") int pageIndex) {
         return productService.findPage(pageIndex - 1, 5);
     }
 
-    @GetMapping("/products/delete/{id}")
-    public List<Product> deleteById(@PathVariable Long id) {
+//    @PostMapping
+//    public ProductDto createNewProduct(@RequestBody ProductDto newProductDTO) {
+//        Product product = new Product();
+//        product.setTitle(newProductDTO.getTitle());
+//        product.setPrice(newProductDTO.getPrice());
+//        return new ProductDto(productService.save(product));
+//    }
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
         productService.deleteById(id);
-        return productService.findAll();
     }
+
+    @PostMapping
+    public ProductDto createNewProduct(@RequestBody ProductDto newProductDTO) {
+        Product product = new Product();
+        product.setTitle(newProductDTO.getTitle());
+        product.setPrice(newProductDTO.getPrice());
+        String cTitle = newProductDTO.getCategoryTitle();
+        Category category = categoryService.findByTitle(cTitle);
+        product.setCategory(category);
+        return new ProductDto(productService.save(product));
+    }
+
+
+//    @GetMapping("/products}")
+//    public Page<Product> findPage(@RequestParam(name = "p") int pageIndex) {
+//        return productService.findPage(pageIndex - 1, 5);
+//    }
+
+//    @GetMapping("/products/delete/{id}")
+//    public List<Product> deleteById(@PathVariable Long id) {
+//        productService.deleteById(id);
+//        return productService.findAll();
+//    }
+
+
 
 
 //    //получение всех товаров [ GET .../app/products ]

@@ -30,6 +30,10 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
+    public Product save(Product newProduct) {
+        return productRepository.save(newProduct);
+    }
+
 //    public void addProduct(String title, int price) {
 //        Product product = new Product();
 //        product.setTitle(title);
