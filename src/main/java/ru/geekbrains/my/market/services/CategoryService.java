@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.geekbrains.my.market.model.Category;
 import ru.geekbrains.my.market.repositories.CategoryRepository;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -12,8 +14,10 @@ public class CategoryService {
 
 
 
-    public Category findById(Long id) {
-        return categoryRepository.findById(id).get();
+    public Optional<Category> findById(Long id) {
+
+
+        return categoryRepository.findById(id);
     }
 
     public Category findByTitle(String title) {

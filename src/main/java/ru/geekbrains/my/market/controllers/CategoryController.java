@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.geekbrains.my.market.dto.CategoryDto;
+import ru.geekbrains.my.market.model.Category;
 import ru.geekbrains.my.market.services.CategoryService;
+import ru.geekbrains.my.market.exceptions.ResourceNotFoundException;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,8 +18,8 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public CategoryDto findById(@PathVariable Long id) {
-        return new CategoryDto(categoryService.findById(id));
+        Category c = categoryService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found, id: " + id));
+        return new CategoryDto(c);
     }
-
 
 }

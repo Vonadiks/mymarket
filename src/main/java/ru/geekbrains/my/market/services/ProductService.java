@@ -8,6 +8,7 @@ import ru.geekbrains.my.market.model.Product;
 import ru.geekbrains.my.market.repositories.ProductRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +19,8 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product findById(Long id) {
-        return productRepository.findById(id).get();
+    public Optional<Product> findById(Long id) {
+        return productRepository.findById(id);
     }
 
     public Page<Product> findPage(int pageIndex, int pageSize ) {

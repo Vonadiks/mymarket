@@ -1,8 +1,8 @@
 angular.module('app', []).controller('indexController', function ($scope, $http) {
-    const contextPath = 'http://localhost:8080/mymarket';
+    const contextPath = 'http://localhost:8080/mymarket/api/v1';
     $scope.loadPage = function(pageIndex = 1) {
             $http({
-                url: contextPath + '/api/v1/products',
+                url: contextPath + '/products',
                 method: 'GET',
                 params: {
                 'p': pageIndex
@@ -25,7 +25,7 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
 
     $scope.loadProducts = function() {
         $http({
-            url: contextPath + '/api/v1/products',
+            url: contextPath + '/products',
             method: 'GET',
             params: {}
         }).then(function (response) {
@@ -34,33 +34,68 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         });
     };
 
-        $scope.loadProducts();
+     $scope.loadCart = function() {
+            $http({
+                url: contextPath + '/cart',
+                method: 'GET',
+                params: {}
+            }).then(function (response) {
+                $scope.cart = response.data;
+            });
+        };
 
-        $scope.showProductInfo = function(productIndex) {
+        $scope.loadCart();
+
+
+        $scope.deleteProductById = function(productIndex) {
                 $http({
-                    url: contextPath + '/api/v1/products/' + productIndex,
-                    method: 'GET',
-                    params: {}
-                }).then(function (response) {
-                    console.log(response);
-                    alert(response.data.title);
-                });
-            };
-
-
-            $scope.deleteProductById = function(productIndex) {
-                $http({
-                       url: contextPath + '/api/v1/products/' + productIndex,
-                       method: 'GET',
+                       url: contextPath + '/products/' + productIndex,
+                       method: 'DELETE',
                        params: {}
                 }).then(function (response) {
                         console.log(response);
-                         $scope.products = response.data;
-                });
+                         //$scope.products = response.data;
+                         $scope.loadProducts();
+                         //$scope.loadPage;
 
+                });
             };
 
+     $scope.addToCart = function(productId) {
+                     $http({
+                            url: contextPath + '/cart/add/' + productId,
+                            method: 'GET',
+                            params: {}
+                     }).then(function (response) {
+                              $scope.loadCart();
+                     });
+                 };
 
+     $scope.loadProducts();
 
+       $scope.deleteProductFromCart = function(productId) {
+                     $http({
+                            url: contextPath + '/cart/delete/' + productId,
+                            method: 'DELETE',
+                            params: {}
+                     }).then(function (response) {
+                             console.log(response);
+                              $scope.cart = response.data;
+                             $scope.loadCart();
+                     });
+
+                 };
+
+       $scope.clear = function() {
+                 $http({
+                     url: contextPath + '/cart/clear',
+                     method: 'DELETE',
+                     params: {}
+                 }).then(function (response) {
+                     $scope.loadCart();
+                 });
+             };
+
+             $scope.loadCart();
 
 });

@@ -8,6 +8,7 @@ import ru.geekbrains.my.market.model.Category;
 import ru.geekbrains.my.market.model.Product;
 import ru.geekbrains.my.market.services.CategoryService;
 import ru.geekbrains.my.market.services.ProductService;
+import ru.geekbrains.my.market.exceptions.ResourceNotFoundException;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,13 +19,28 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ProductDto findById(@PathVariable Long id) {
-        return new ProductDto(productService.findById(id));
+        Product p = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found, id: " + id));
+        return new ProductDto(p);
+//        Optional<Product> p = productService.findById(id);
+//        if (p.isPresent()) {
+//            return new ResponseEntity<>(new ProductDto(p.get()), HttpStatus.OK);
+//        }
+//        throw new ResourceNotFoundException("Product not found, id: " + id);
+        ////return new ResponseEntity<>(new MarketError(HttpStatus.NOT_FOUND.value(), "Product not found, id: " + id), HttpStatus.NOT_FOUND);
+
+        //////return new ProductDto(productService.findById(id));
     }
+
+//    @ExceptionHandler
+//    public MarketError catchResourceNotFoundException(ResourceNotFoundException e) {
+//        return new MarketError(HttpStatus.NOT_FOUND.value(), e.getMessage());
+//    }
 
 
     @GetMapping
-    public Page<Product> findAll(@RequestParam(name = "p", defaultValue = "1") int pageIndex) {
-        return productService.findPage(pageIndex - 1, 5);
+    public Page<ProductDto> findAll(@RequestParam(name = "p", defaultValue = "1") int pageIndex) {
+        return productService.findPage(pageIndex - 1, 5).map(ProductDto::new);
+        //return productService.findPage(pageIndex - 1, 5);
     }
 
 //    @PostMapping
@@ -35,8 +51,10 @@ public class ProductController {
 //        return new ProductDto(productService.save(product));
 //    }
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id) {
+    public Page<ProductDto> deleteById(@PathVariable Long id) {
         productService.deleteById(id);
+        return findAll(1);
+
     }
 
     @PostMapping
