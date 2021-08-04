@@ -25,12 +25,13 @@ public class OrderController {
     public void createOrder(Principal principal) {
         User user = userService.findByUsername(principal.getName()).get();
         System.out.println(user.getEmail());
-        orderService.createOrder();
+        orderService.createOrder(user.getEmail());
     }
 
     @GetMapping
-    public List<OrderDto> loadAllOrders() {
-        return orderService.findAll().stream().map(OrderDto::new).collect(Collectors.toList());
+    public List<OrderDto> loadAllOrders(Principal principal) {
+        User user = userService.findByUsername(principal.getName()).get();
+        return orderService.findAll().stream().filter(u->u.getEmail().equals(user.getEmail())).map(OrderDto::new).collect(Collectors.toList());
     }
 
 }

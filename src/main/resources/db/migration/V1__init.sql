@@ -39,6 +39,7 @@ values
 create table orders
 (
     id         bigserial primary key,
+    email      varchar(50) not null,
     price      numeric(8, 2) not null,
     created_at timestamp default current_timestamp,
     updated_at timestamp default current_timestamp

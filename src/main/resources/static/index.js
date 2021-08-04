@@ -107,11 +107,15 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
                  });
              }
 
-             $scope.createOrder = function () {
+             /*$scope.createOrder = function () {
                  $http({
                      url: contextPath + '/orders',
-                     method: 'POST'
-                 }).then(function (response) {
+                     method: 'POST',
+                     params: {'user': $scope.user} */
+
+              $scope.createOrder = function () {
+                $http.post(contextPath + '/orders', $scope.user)
+                 .then(function (response) {
                      alert('Заказ создан');
                      $scope.loadCart();
                      $scope.loadOrders();

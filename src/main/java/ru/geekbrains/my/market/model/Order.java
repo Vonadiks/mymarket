@@ -21,9 +21,13 @@ public class Order {
     @Column(name = "id")
     private Long id;
 
+    @Column (name = "email")
+    private String email;
+
     @OneToMany(mappedBy = "order")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<OrderItem> items;
+
 
     @Column(name = "price")
     private BigDecimal price;
