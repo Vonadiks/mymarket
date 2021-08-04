@@ -8,12 +8,10 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class MarketError {
-    private int status;
     private String message;
     private Date timestamp;
 
-    public MarketError(int status, String message) {
-        this.status = status;
+    public MarketError(String message) {
         this.message = message;
         this.timestamp = new Date();
     }
