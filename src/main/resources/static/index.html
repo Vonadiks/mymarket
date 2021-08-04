@@ -51,6 +51,8 @@
 
     <p></p>
     <h3>Корзина</h3>
+    <span ng-show="cart == null || cart.items.length == 0">Ваша корзина пуста</span>
+    <div ng-show="cart.items.length > 0">
     <table class="table">
 
         <thead>
@@ -81,6 +83,29 @@
         </tfoot>
     </table>
     <p></p>
+    <button class="btn btn-primary" ng-click="createOrder()">Оформить заказ</button>
+
+    </div>
+    <p></p>
+    <h3>Ваши заказы</h3>
+
+    <table class="table">
+
+        <thead>
+        <tr>
+            <td>Id</td>
+            <td>Цена</td>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="o in orders">
+            <td>{{o.id}}</td>
+            <td>{{o.price}}</td>
+
+        </tr>
+        </tbody>
+    </table>
 
 
 </div>

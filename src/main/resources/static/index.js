@@ -89,13 +89,34 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
        $scope.clear = function() {
                  $http({
                      url: contextPath + '/cart/clear',
-                     method: 'DELETE',
+                     method: 'GET',
                      params: {}
                  }).then(function (response) {
-                     $scope.loadCart();
+                     $scope.cart=null;
                  });
              };
+             $scope.loadOrders = function () {
+                 $http({
+                     url: contextPath + '/orders',
+                     method: 'GET'
+                 }).then(function (response) {
+                     $scope.orders = response.data;
+                 });
+             }
 
-             $scope.loadCart();
+             $scope.createOrder = function () {
+                 $http({
+                     url: contextPath + '/orders',
+                     method: 'POST'
+                 }).then(function (response) {
+                     alert('Заказ создан');
+                     $scope.loadCart();
+                     $scope.loadOrders();
+                 });
+             }
+
+                 $scope.loadPage();
+                 $scope.loadCart();
+                 $scope.loadOrders();
 
 });

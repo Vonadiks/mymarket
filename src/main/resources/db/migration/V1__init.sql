@@ -35,3 +35,23 @@ values
 ('Prod_18', 180, 1),
 ('Prod_19', 190, 1),
 ('Prod_20', 200, 1);
+
+create table orders
+(
+    id         bigserial primary key,
+    price      numeric(8, 2) not null,
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp
+);
+
+create table order_items
+(
+    id                bigserial primary key,
+    price             numeric(8, 2) not null,
+    price_per_product numeric(8, 2) not null,
+    product_id        bigint references products (id),
+    order_id          bigint references products (id),
+    quantity          int,
+    created_at        timestamp default current_timestamp,
+    updated_at        timestamp default current_timestamp
+);

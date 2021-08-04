@@ -37,7 +37,7 @@ public class CartController {
         cart.delete(p);
     }
 
-    @DeleteMapping("/clear")
+    @GetMapping("/clear")
     public void clear() {
         cart.clear();
     }
