@@ -94,7 +94,7 @@
         <tbody>
         <tr ng-repeat="oi in cart.items">
             <td>{{oi.productTitle}}</td>
-            <td><button class="btn btn-danger" ng-click="deleteProductFromCart(oi.productId)"> - </button> {{oi.quantity}} <button class="btn btn-danger" ng-click="addToCart(oi.productId)"> + </button></td>
+            <td><button class="btn btn-danger" ng-click="decrementCartPosition(oi.productId)"> - </button> {{oi.quantity}} <button class="btn btn-danger" ng-click="incrementCartPosition(oi.productId)"> + </button></td>
             <td>{{oi.quantity + ' x ' + oi.pricePerProduct + ' = ' + oi.price}}</td>
             <td><button class="btn btn-danger" ng-click="deleteProductFromCart(oi.productId)">Удалить</button></td>
 

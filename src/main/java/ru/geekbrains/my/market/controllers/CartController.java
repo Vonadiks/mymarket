@@ -28,18 +28,24 @@ public class CartController {
         cart.add(p);
     }
 
-    @DeleteMapping("/delete/{productId}")
+    @GetMapping("/delete/{productId}")
     public void deleteProductFromCart(@PathVariable Long productId) {
-        if (cart.delete(productId)) {
-            return;
-        }
-        Product p = productService.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Unable add product to cart. Product not found, id: " + productId));
-        cart.delete(p);
+        cart.delete(productId);
+//        if (cart.delete(productId)) {
+//            return;
+//        }
+//        Product p = productService.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Unable add product to cart. Product not found, id: " + productId));
+//        cart.delete(p);
     }
 
     @GetMapping("/clear")
     public void clear() {
         cart.clear();
+    }
+
+    @GetMapping("/decrement/{productId}")
+    public void decrement(@PathVariable Long productId) {
+        cart.changeQuantity(productId, -1);
     }
 
 
