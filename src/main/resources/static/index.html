@@ -21,6 +21,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#!/" style="font-weight: bold;">Summer Market</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#!/products">Каталог</a>
+                </li>
+                <li class="nav-item" ng-show="isUserLoggedIn()">
+                    <a class="nav-link" href="#!/orders">Мои заказы</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#!/cart">Корзина</a>
+                </li>
                 <li class="nav-item" ng-show="!isUserLoggedIn()">
                     <form class="align-middle" ng-submit="tryToAuth()">
                         <div class="input-group input-group-sm" style="padding: 4px;">
@@ -42,104 +51,16 @@
             </ul>
         </div>
     </nav>
-    <h1>My Market</h1>
-<table class="table">
+    <ng-view></ng-view>
 
-    <thead>
-    <tr>
-        <td>Id</td>
-        <td>Название</td>
-        <td>Цена</td>
-        <td></td>
-
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="p in productsPage.content">
-        <td>{{p.id}}</td>
-        <td>{{p.title}}</td>
-        <td>{{p.price}}</td>
-        <td><button class="btn btn-primary" ng-click="addToCart(p.id)">В корзину</button></td>
-        <td><button class="btn btn-primary" ng-click="deleteProductById(p.id)">Delete</button></td>
-
-    </tr>
-
-
-
-    </tbody>
-</table>
-    <p></p>
-
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li ng-repeat="p in navList" class="page-item">
-                <a class="page-link" ng-click="loadPage(p)">{{p}}</a>
-            </li>
-        </ul>
-    </nav>
-
-    <p></p>
-    <h3>Корзина</h3>
-    <span ng-show="cart == null || cart.items.length == 0">Ваша корзина пуста</span>
-    <div ng-show="cart.items.length > 0">
-    <table class="table">
-
-        <thead>
-        <tr>
-            <td>Название</td>
-            <td>Количество</td>
-            <td>Цена</td>
-
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="oi in cart.items">
-            <td>{{oi.productTitle}}</td>
-            <td><button class="btn btn-danger" ng-click="decrementCartPosition(oi.productId)"> - </button> {{oi.quantity}} <button class="btn btn-danger" ng-click="incrementCartPosition(oi.productId)"> + </button></td>
-            <td>{{oi.quantity + ' x ' + oi.pricePerProduct + ' = ' + oi.price}}</td>
-            <td><button class="btn btn-danger" ng-click="deleteProductFromCart(oi.productId)">Удалить</button></td>
-
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td></td>
-            <td></td>
-            <td>{{'Итого: ' + cart.price}}</td>
-            <td><button class="btn btn-danger" ng-click="clear()">Очистить корзину</button></td>
-
-        </tr>
-        </tfoot>
-    </table>
-    <p></p>
-        <button ng-show="isUserLoggedIn()" class="btn btn-primary" ng-click="createOrder()">Оформить заказ</button>
-        <button ng-show="!isUserLoggedIn()" class="btn btn-secondary">Авторизуйтесь для оформления заказа</button>
-
-    </div>
-    <div ng-show="isUserLoggedIn()">
-    <p></p>
-    <h3>Ваши заказы</h3>
-
-    <table class="table">
-
-        <thead>
-        <tr>
-            <td>Id</td>
-            <td>Цена</td>
-
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="o in orders">
-            <td>{{o.id}}</td>
-            <td>{{o.price}}</td>
-
-        </tr>
-        </tbody>
-    </table>
-
-    </div>
+    <script src="index.js"></script>
+    <script src="greetings/greetings.js"></script>
+    <script src="products/products.js"></script>
+    <script src="orders/orders.js"></script>
+    <script src="cart/cart.js"></script>
 </div>
+
+
 
 </body>
 </html>

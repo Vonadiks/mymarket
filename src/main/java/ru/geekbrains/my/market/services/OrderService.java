@@ -2,15 +2,16 @@ package ru.geekbrains.my.market.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.my.market.dto.OrderItemDto;
 import ru.geekbrains.my.market.exceptions.ResourceNotFoundException;
 import ru.geekbrains.my.market.model.Order;
 import ru.geekbrains.my.market.model.OrderItem;
 import ru.geekbrains.my.market.model.Product;
+import ru.geekbrains.my.market.model.User;
 import ru.geekbrains.my.market.repositories.OrderRepository;
 import ru.geekbrains.my.market.utils.Cart;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,17 +24,19 @@ public class OrderService {
     private final Cart cart;
 
     @Transactional
-    public void createOrder(String email){
+    public void createOrder(User user, String address, String phone) {
         Order order = new Order();
-        order.setEmail(email);
         order.setPrice(cart.getPrice());
         order.setItems(new ArrayList<>());
+        order.setUser(user);
+        order.setPhone(phone);
+        order.setAddress(address);
         for (OrderItemDto o : cart.getItems()) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setQuantity(o.getQuantity());
             Product product = productService.findById(o.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-            orderItem.setPrice(o.getPrice().multiply(BigDecimal.valueOf(o.getQuantity())));
+            orderItem.setPrice(product.getPrice().multiply(BigDecimal.valueOf(o.getQuantity())));
             orderItem.setPricePerProduct(product.getPrice());
             orderItem.setProduct(product);
             order.getItems().add(orderItem);
@@ -41,6 +44,26 @@ public class OrderService {
         orderRepository.save(order);
         cart.clear();
     }
+
+//    @Transactional
+//    public void createOrder(String email){
+//        Order order = new Order();
+//        order.setEmail(email);
+//        order.setPrice(cart.getPrice());
+//        order.setItems(new ArrayList<>());
+//        for (OrderItemDto o : cart.getItems()) {
+//            OrderItem orderItem = new OrderItem();
+//            orderItem.setOrder(order);
+//            orderItem.setQuantity(o.getQuantity());
+//            Product product = productService.findById(o.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+//            orderItem.setPrice(o.getPrice().multiply(BigDecimal.valueOf(o.getQuantity())));
+//            orderItem.setPricePerProduct(product.getPrice());
+//            orderItem.setProduct(product);
+//            order.getItems().add(orderItem);
+//        }
+//        orderRepository.save(order);
+//        cart.clear();
+//    }
 
     public List<Order> findAll(){
         return orderRepository.findAll();

@@ -36,11 +36,24 @@ values
 ('Prod_19', 190, 1),
 ('Prod_20', 200, 1);
 
+
+
+create table users
+(
+    id         bigserial primary key,
+    username   varchar(30) not null,
+    password   varchar(80) not null,
+    email      varchar(50) unique,
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp
+);
 create table orders
 (
     id         bigserial primary key,
-    email      varchar(50) not null,
     price      numeric(8, 2) not null,
+    user_id    bigint references users (id),
+    address    varchar(255),
+    phone      varchar(32),
     created_at timestamp default current_timestamp,
     updated_at timestamp default current_timestamp
 );
@@ -55,16 +68,6 @@ create table order_items
     quantity          int,
     created_at        timestamp default current_timestamp,
     updated_at        timestamp default current_timestamp
-);
-
-create table users
-(
-    id         bigserial primary key,
-    username   varchar(30) not null,
-    password   varchar(80) not null,
-    email      varchar(50) unique,
-    created_at timestamp default current_timestamp,
-    updated_at timestamp default current_timestamp
 );
 
 create table roles

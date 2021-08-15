@@ -21,8 +21,6 @@ public class Order {
     @Column(name = "id")
     private Long id;
 
-    @Column (name = "email")
-    private String email;
 
     @OneToMany(mappedBy = "order")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
@@ -31,6 +29,16 @@ public class Order {
 
     @Column(name = "price")
     private BigDecimal price;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "phone")
+    private String phone;
 
     @CreationTimestamp
     @Column(name = "created_at")
