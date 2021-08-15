@@ -3,6 +3,7 @@ package ru.geekbrains.my.market.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.geekbrains.my.market.dto.OrderDto;
 import ru.geekbrains.my.market.dto.OrderItemDto;
 import ru.geekbrains.my.market.exceptions.ResourceNotFoundException;
 import ru.geekbrains.my.market.model.Order;
@@ -15,6 +16,7 @@ import ru.geekbrains.my.market.utils.Cart;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +45,11 @@ public class OrderService {
         }
         orderRepository.save(order);
         cart.clear();
+    }
+
+    @Transactional
+    public List<OrderDto> findAllDtosByUsername(String username) {
+        return orderRepository.findAllByUsername(username).stream().map(OrderDto::new).collect(Collectors.toList());
     }
 
 //    @Transactional
