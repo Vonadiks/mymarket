@@ -2,13 +2,17 @@ package ru.geekbrains.my.market.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.my.market.dto.ProductDto;
 import ru.geekbrains.my.market.model.Category;
 import ru.geekbrains.my.market.model.Product;
+import ru.geekbrains.my.market.repositories.specifications.ProductSpecifications;
 import ru.geekbrains.my.market.services.CategoryService;
 import ru.geekbrains.my.market.services.ProductService;
 import ru.geekbrains.my.market.exceptions.ResourceNotFoundException;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,8 +42,19 @@ public class ProductController {
 
 
     @GetMapping
-    public Page<ProductDto> findAll(@RequestParam(name = "p", defaultValue = "1") int pageIndex) {
-        return productService.findPage(pageIndex - 1, 5).map(ProductDto::new);
+    public Page<ProductDto> findAll(
+            @RequestParam(name = "p", defaultValue = "1") int pageIndex,
+            @RequestParam (name = "min_price", required = false) BigDecimal minPrice,
+            @RequestParam (name = "title", required = false) String title
+    ) {
+        Specification<Product> spec = Specification.where(null);
+        if (minPrice != null) {
+            spec = spec.and(ProductSpecifications.priceGreaterOrEqualsThan(minPrice));
+        }
+        if (title != null) {
+            spec = spec.and(ProductSpecifications.titleLike(title));
+        }
+        return productService.findPage(pageIndex - 1, 5, spec).map(ProductDto::new);
         //return productService.findPage(pageIndex - 1, 5);
     }
 
@@ -50,11 +65,16 @@ public class ProductController {
 //        product.setPrice(newProductDTO.getPrice());
 //        return new ProductDto(productService.save(product));
 //    }
-    @DeleteMapping("/{id}")
-    public Page<ProductDto> deleteById(@PathVariable Long id) {
-        productService.deleteById(id);
-        return findAll(1);
+//    @DeleteMapping("/{id}")
+//    public Page<ProductDto> deleteById(@PathVariable Long id) {
+//        productService.deleteById(id);
+//        return findAll(1, spec);
+//
+//    }
 
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
+        productService.deleteById(id);
     }
 
     @PostMapping
