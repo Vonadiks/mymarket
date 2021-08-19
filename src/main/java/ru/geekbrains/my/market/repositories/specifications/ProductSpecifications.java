@@ -10,7 +10,14 @@ public class ProductSpecifications {
         return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice);
     }
 
+    public static Specification<Product> priceLessOrEqualsThan(BigDecimal maxPrice) {
+        //return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.smallerThanOrEqualTo(root.get("price"), maxPrice);
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice);
+    }
+
     public static Specification<Product> titleLike(String title) {
         return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + title + "%");
     }
 }
+
+
