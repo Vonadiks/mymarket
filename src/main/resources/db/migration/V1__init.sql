@@ -85,6 +85,15 @@ CREATE TABLE users_roles
     primary key (user_id, role_id)
 );
 
+create table statistic (
+id bigserial primary key,
+service varchar(255) unique,
+duration bigint,
+created_at timestamp default current_timestamp,
+updated_at timestamp default current_timestamp
+);
+
+
 insert into roles (name)
 values ('ROLE_USER'),
        ('ROLE_ADMIN');

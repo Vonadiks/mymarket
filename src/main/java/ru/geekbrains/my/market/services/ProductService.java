@@ -24,7 +24,9 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public Page<Product> findPage(int pageIndex, int pageSize, Specification<Product> spec) {
+    public Page<Product> findPage(int pageIndex, int pageSize, Specification<Product> spec)
+    {
+
         return productRepository.findAll(spec, (PageRequest.of(pageIndex, pageSize)));
     }
 
