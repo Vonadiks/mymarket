@@ -80,7 +80,6 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                                   //$scope.cart = response.data;
                                  $scope.loadCart();
                          });
-
                      };
       $scope.createOrder = function () {
              $http({
@@ -97,7 +96,5 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                  alert(response.data.messages);
              });
          }
-
     $scope.loadCart();
-
 });
