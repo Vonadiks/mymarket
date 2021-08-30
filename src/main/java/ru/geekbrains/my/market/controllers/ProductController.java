@@ -5,12 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.my.market.dto.ProductDto;
+import ru.geekbrains.my.market.exceptions.ResourceNotFoundException;
 import ru.geekbrains.my.market.model.Category;
 import ru.geekbrains.my.market.model.Product;
-import ru.geekbrains.my.market.repositories.specifications.ProductSpecifications;
 import ru.geekbrains.my.market.services.CategoryService;
 import ru.geekbrains.my.market.services.ProductService;
-import ru.geekbrains.my.market.exceptions.ResourceNotFoundException;
+import ru.geekbrains.my.market.utils.BaseSpecification;
 
 import java.math.BigDecimal;
 
@@ -45,16 +45,22 @@ public class ProductController {
     public Page<ProductDto> findAll(
             @RequestParam(name = "p", defaultValue = "1") int pageIndex,
             @RequestParam (name = "min_price", required = false) BigDecimal minPrice,
+            @RequestParam (name = "max_price", required = false) BigDecimal maxPrice,
             @RequestParam (name = "title", required = false) String title
     ) {
-        Specification<Product> spec = Specification.where(null);
-        if (minPrice != null) {
-            spec = spec.and(ProductSpecifications.priceGreaterOrEqualsThan(minPrice));
-        }
-        if (title != null) {
-            spec = spec.and(ProductSpecifications.titleLike(title));
-        }
-        return productService.findPage(pageIndex - 1, 5, spec).map(ProductDto::new);
+        Specification<Product> productSpec = new BaseSpecification<Product>(minPrice, maxPrice, title).getProductSpecification();
+        return productService.findPage(pageIndex - 1, 10, productSpec).map(ProductDto::new);
+//        Specification<Product> spec = Specification.where(null);
+//        if (minPrice != null ) {
+//            spec = spec.and(ProductSpecifications.priceGreaterOrEqualsThan(new BigDecimal(minPrice)));
+//        }
+//        if (maxPrice != null) {
+//            spec = spec.and(ProductSpecifications.priceLessOrEqualsThan(new BigDecimal(maxPrice)));
+//        }
+//        if (title != null) {
+//            spec = spec.and(ProductSpecifications.titleLike(title));
+//        }
+       // return productService.findPage(pageIndex - 1, 5, spec).map(ProductDto::new);
         //return productService.findPage(pageIndex - 1, 5);
     }
 
