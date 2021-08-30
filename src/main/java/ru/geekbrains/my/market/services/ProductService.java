@@ -7,9 +7,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.geekbrains.my.market.model.Product;
 import ru.geekbrains.my.market.repositories.ProductRepository;
+import ru.geekbrains.my.market.soap.products.Productsoap;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,10 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
+//    public ru.geekbrains.my.market.soap.products.Product findById(Long id) {
+//        return productRepository.findById(id);
+//    }
+
     public Page<Product> findPage(int pageIndex, int pageSize, Specification<Product> spec)
     {
 
@@ -36,6 +43,22 @@ public class ProductService {
 
     public Product save(Product newProduct) {
         return productRepository.save(newProduct);
+    }
+
+    public static final Function<Product, Productsoap> functionEntityToSoap = p -> {
+        Productsoap productSoap = new Productsoap();
+        productSoap.setId(p.getId());
+        productSoap.setTitle(p.getTitle());
+        productSoap.setPrice(p.getPrice());
+        return productSoap;
+    };
+
+    public List<Productsoap> getAllProducts() {
+        return productRepository.findAll().stream().map(functionEntityToSoap).collect(Collectors.toList());
+    }
+
+    public Productsoap getByIdSoap(Long id) {
+        return productRepository.findById(id).map(functionEntityToSoap).get();
     }
 
 //    public void addProduct(String title, int price) {
