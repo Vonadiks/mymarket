@@ -1,7 +1,7 @@
 package ru.geekbrains.my.market.endpoints;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
@@ -11,7 +11,7 @@ import ru.geekbrains.my.market.soap.products.GetAllProductsResponse;
 import ru.geekbrains.my.market.soap.products.GetProductByIdRequest;
 import ru.geekbrains.my.market.soap.products.GetProductByIdResponse;
 
-@Service
+@Endpoint
 @RequiredArgsConstructor
 public class ProductEndpoint {
     private static final String NAMESPACE_URI = "http://www.geekbrains.ru/my/market/products";
