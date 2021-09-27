@@ -48,19 +48,19 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                      });
                  };
 
-      $scope.createOrder = function() {
-            $http({
-                url: contextPath + '/api/v1/orders',
-                method: 'POST',
-                params: {
-                    phone: $scope.order_info.phone,
-                    address: $scope.order_info.address
-                }
-            }).then(function(response) {
-                alert('Заказ создан');
-                $scope.loadCart();
-            });
-        };
+//      $scope.createOrder = function() {
+//            $http({
+//                url: contextPath + '/api/v1/orders',
+//                method: 'POST',
+//                params: {
+//                    phone: $scope.order_info.phone,
+//                    address: $scope.order_info.address
+//                }
+//            }).then(function(response) {
+//                alert('Заказ создан');
+//                $scope.loadCart();
+//            });
+//        };
 
 //    $scope.createOrder = function () {
 //                    $http.post(contextPath + '/api/v1/orders', $scope.user)
@@ -80,7 +80,6 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                                   //$scope.cart = response.data;
                                  $scope.loadCart();
                          });
-
                      };
       $scope.createOrder = function () {
              $http({
@@ -97,7 +96,5 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                  alert(response.data.messages);
              });
          }
-
     $scope.loadCart();
-
 });

@@ -8,7 +8,6 @@ import ru.geekbrains.my.market.model.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
-
 //    List<Product> findAllByPriceGreaterThanEqual(int minPrice);
 //    List<Product> findAllByIdLessThanEqual(Long maxId);
 //    List<Product> findAllByIdBetweenAndPriceGreaterThan(Long minId, Long maxId, int minPrice);
