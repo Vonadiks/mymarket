@@ -30,24 +30,45 @@
     }
 
     function run($rootScope, $http, $localStorage) {
+        const contextPath = 'http://localhost:8080/mymarket/api/v1';
         if ($localStorage.summerUser) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.summerUser.token;
         }
+        if (!$localStorage.guestCartUuid) {
+                    $http.get(contextPath + '/cart/generate')
+                        .then(function successCallback(response) {
+                            $localStorage.guestCartUuid = response.data.value;
+                        });
+                }
     }
 })();
 
 angular.module('app').controller('indexController', function ($rootScope, $scope, $http, $localStorage) {
-    const contextPath = 'http://localhost:8080/mymarket';
+    const contextPath = 'http://localhost:8080/mymarket/api/v1';
 
     $scope.tryToAuth = function () {
-        $http.post(contextPath + '/api/v1/auth', $scope.user)
+        $http.post(contextPath + '/auth', $scope.user)
             .then(function successCallback(response) {
                 if (response.data.token) {
                     $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
                     $localStorage.summerUser = {username: $scope.user.username, token: response.data.token};
 
-                    $scope.user.username = null;
-                    $scope.user.password = null;
+                     if ($scope.user.username) {
+                         $scope.user.username = null;
+                     }
+                     if ($scope.user.password) {
+                         $scope.user.password = null;
+                      }
+
+                      $http.get(contextPath + '/cart/' + $localStorage.guestCartUuid + '/merge')
+                            .then(function successCallback(response) {
+                             $localStorage.guestCartUuid = response.data.value;
+                       });
+
+
+//                    $scope.user.username = null;
+//                    $scope.user.password = null;
+
                 }
             }, function errorCallback(response) {
             });
