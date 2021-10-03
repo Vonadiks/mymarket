@@ -3,7 +3,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
 
     $scope.loadCart = function() {
                 $http({
-                    url: contextPath + '/api/v1/cart',
+                    url: contextPath + '/api/v1/cart/' + $localStorage.guestCartUuid,
                     method: 'GET',
                     params: {}
                 }).then(function (response) {
@@ -12,7 +12,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
             };
     $scope.decrementCartPosition = function(productId) {
                               $http({
-                                     url: contextPath + '/api/v1/cart/decrement/' + productId,
+                                     url: contextPath + '/api/v1/cart/' + $localStorage.guestCartUuid + '/decrement/' + productId,
                                      method: 'GET',
                                      params: {}
                               }).then(function (response) {
@@ -21,7 +21,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                           };
     $scope.incrementCartPosition = function(productId) {
                                    $http({
-                                          url: contextPath + '/api/v1/cart/add/' + productId,
+                                          url: contextPath + '/api/v1/cart/' + $localStorage.guestCartUuid + '/add/' + productId,
                                           method: 'GET',
                                           params: {}
                                    }).then(function (response) {
@@ -31,7 +31,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
 
     $scope.addToCart = function(productId) {
                          $http({
-                                url: contextPath + '/api/v1/cart/add/' + productId,
+                                url: contextPath + '/api/v1/cart/' + $localStorage.guestCartUuid + '/add/' + productId,
                                 method: 'GET',
                                 params: {}
                          }).then(function (response) {
@@ -40,7 +40,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                      };
      $scope.clear = function() {
                      $http({
-                         url: contextPath + '/api/v1/cart/clear',
+                         url: contextPath + '/api/v1/cart/' + $localStorage.guestCartUuid + '/clear',
                          method: 'GET',
                          params: {}
                      }).then(function (response) {
@@ -48,19 +48,19 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                      });
                  };
 
-      $scope.createOrder = function() {
-            $http({
-                url: contextPath + '/api/v1/orders',
-                method: 'POST',
-                params: {
-                    phone: $scope.order_info.phone,
-                    address: $scope.order_info.address
-                }
-            }).then(function(response) {
-                alert('Заказ создан');
-                $scope.loadCart();
-            });
-        };
+//      $scope.createOrder = function() {
+//            $http({
+//                url: contextPath + '/api/v1/orders',
+//                method: 'POST',
+//                params: {
+//                    phone: $scope.order_info.phone,
+//                    address: $scope.order_info.address
+//                }
+//            }).then(function(response) {
+//                alert('Заказ создан');
+//                $scope.loadCart();
+//            });
+//        };
 
 //    $scope.createOrder = function () {
 //                    $http.post(contextPath + '/api/v1/orders', $scope.user)
@@ -72,7 +72,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
 //                 };
      $scope.deleteProductFromCart = function(productId) {
                          $http({
-                                url: contextPath + '/api/v1/cart/delete/' + productId,
+                                url: contextPath + '/api/v1/cart/' + $localStorage.guestCartUuid + '/delete/' + productId,
                                 method: 'GET',
                                 params: {}
                          }).then(function (response) {
@@ -80,7 +80,6 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                                   //$scope.cart = response.data;
                                  $scope.loadCart();
                          });
-
                      };
       $scope.createOrder = function () {
              $http({
@@ -97,7 +96,5 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
                  alert(response.data.messages);
              });
          }
-
     $scope.loadCart();
-
 });

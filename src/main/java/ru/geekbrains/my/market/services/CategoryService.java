@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.geekbrains.my.market.model.Category;
 import ru.geekbrains.my.market.repositories.CategoryRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -12,12 +13,12 @@ import java.util.Optional;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-
-
     public Optional<Category> findById(Long id) {
-
-
         return categoryRepository.findById(id);
+    }
+
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
     }
 
     public Category findByTitle(String title) {

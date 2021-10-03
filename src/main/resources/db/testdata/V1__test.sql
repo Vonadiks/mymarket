@@ -24,20 +24,7 @@ values
 ('Prod_7', 70, 1),
 ('Prod_8', 80, 1),
 ('Prod_9', 90, 1),
-('Prod_10', 100, 1),
-('Prod_11', 110, 1),
-('Prod_12', 120, 1),
-('Prod_13', 130, 1),
-('Prod_14', 140, 1),
-('Prod_15', 150, 1),
-('Prod_16', 160, 1),
-('Prod_17', 170, 1),
-('Prod_18', 180, 1),
-('Prod_19', 190, 1),
-('Prod_20', 200, 1),
-('Prod_21', 210, 1);
-
-
+('Prod_10', 100, 1);
 
 create table users
 (
@@ -58,6 +45,7 @@ create table orders
     created_at timestamp default current_timestamp,
     updated_at timestamp default current_timestamp
 );
+
 
 create table order_items
 (
@@ -106,3 +94,9 @@ values ('user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 
 insert into users_roles (user_id, role_id)
 values (1, 1),
        (2, 2);
+
+insert into orders (price, user_id, address, phone)
+values
+(100, 1, 'Volzhskaya 22', '223322'),
+(100, 2, 'Novaya 33', '555555'),
+(300, 1, 'Volzhskaya 22', '223322');
