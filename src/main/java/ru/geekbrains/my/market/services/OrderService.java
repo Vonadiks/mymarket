@@ -27,7 +27,7 @@ public class OrderService {
 
     @Transactional
     public void createOrder(User user, String address, String phone) {
-        Cart cart = cartService.getCurrentCart(user.getUsername());
+        Cart cart = cartService.getCurrentCart(cartService.getCartUuidFromSuffix(user.getUsername()));
         Order order = new Order();
         order.setPrice(cart.getPrice());
         order.setItems(new ArrayList<>());
@@ -46,7 +46,7 @@ public class OrderService {
         }
         orderRepository.save(order);
         cart.clear();
-        cartService.updateCart(cart, user.getUsername());
+        cartService.updateCart(cartService.getCartUuidFromSuffix(user.getUsername()), cart);
     }
 
     @Transactional

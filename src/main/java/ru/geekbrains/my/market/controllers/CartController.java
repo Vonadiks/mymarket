@@ -6,9 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.geekbrains.my.market.dto.StringResponse;
-import ru.geekbrains.my.market.exceptions.ResourceNotFoundException;
 import ru.geekbrains.my.market.services.CartService;
-import ru.geekbrains.my.market.services.ProductService;
 import ru.geekbrains.my.market.utils.Cart;
 
 import java.security.Principal;
@@ -18,62 +16,57 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class CartController {
     private final CartService cartService;
-    private final ProductService productService;
 
     @GetMapping("/{uuid}")
     public Cart getCart(Principal principal, @PathVariable String uuid) {
-        return cartService.getCurrentCart(getCurrentCartSuffix(principal, uuid));
+        return cartService.getCurrentCart(getCurrentCartUuid(principal, uuid));
     }
 
     @GetMapping("/generate")
     public StringResponse getCart() {
-        return new StringResponse(cartService.generateCart());
+        return new StringResponse(cartService.generateCartUuid());
     }
 
     @GetMapping("/{uuid}/add/{productId}")
     public void add(Principal principal, @PathVariable String uuid, @PathVariable Long productId) {
-        Cart cart = cartService.getCurrentCart(getCurrentCartSuffix(principal, uuid));
-        if (!cart.add(productId)) {
-            cart.add(productService.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Unable add product to cart. Product not found id: " + productId)));
-        }
-        cartService.updateCart(cart, getCurrentCartSuffix(principal, uuid));
+        cartService.addToCart(getCurrentCartUuid(principal, uuid), productId);
     }
 
     @GetMapping("/{uuid}/decrement/{productId}")
     public void decrement(Principal principal, @PathVariable String uuid, @PathVariable Long productId) {
-        Cart cart = cartService.getCurrentCart(getCurrentCartSuffix(principal, uuid));
-        cart.changeQuantity(productId, -1);
-        cartService.updateCart(cart, getCurrentCartSuffix(principal, uuid));
+        cartService.decrementItem(getCurrentCartUuid(principal, uuid), productId);
     }
 
     @GetMapping("/{uuid}/remove/{productId}")
-    public void deleteProductFromCart(Principal principal, @PathVariable String uuid, @PathVariable Long productId) {
-        Cart cart = cartService.getCurrentCart(getCurrentCartSuffix(principal, uuid));
-        cart.remove(productId);
-        cartService.updateCart(cart, getCurrentCartSuffix(principal, uuid));
+    public void remove(Principal principal, @PathVariable String uuid, @PathVariable Long productId) {
+        cartService.removeItemFromCart(getCurrentCartUuid(principal, uuid), productId);
     }
+
+//    @GetMapping("/{uuid}/remove/{productId}")
+//    public void deleteProductFromCart(Principal principal, @PathVariable String uuid, @PathVariable Long productId) {
+//        Cart cart = cartService.getCurrentCart(getCurrentCartSuffix(principal, uuid));
+//        cart.remove(productId);
+//        cartService.updateCart(cart, getCurrentCartSuffix(principal, uuid));
+//    }
 
     @GetMapping("/{uuid}/clear")
     public void clear(Principal principal, @PathVariable String uuid) {
-        Cart cart = cartService.getCurrentCart(getCurrentCartSuffix(principal, uuid));
-        cart.clear();
-        cartService.updateCart(cart, getCurrentCartSuffix(principal, uuid));
+        cartService.clearCart(getCurrentCartUuid(principal, uuid));
     }
 
     @GetMapping("/{uuid}/merge")
     public void merge(Principal principal, @PathVariable String uuid) {
-        Cart guestCart = cartService.getCurrentCart(uuid);
-        Cart userCart = cartService.getCurrentCart(principal.getName());
-        userCart.merge(guestCart);
-        cartService.updateCart(userCart, principal.getName());
-        cartService.deleteCart(uuid);
+        cartService.merge(
+                getCurrentCartUuid(principal, null),
+                getCurrentCartUuid(null, uuid)
+        );
     }
 
-    private String getCurrentCartSuffix(Principal principal, String uuid) {
+    private String getCurrentCartUuid(Principal principal, String uuid) {
         if (principal != null) {
-            return principal.getName();
+            return cartService.getCartUuidFromSuffix(principal.getName());
         }
-        return uuid;
+        return cartService.getCartUuidFromSuffix(uuid);
     }
 //    private final CartService cartService;
 //    private final ProductService productService;
