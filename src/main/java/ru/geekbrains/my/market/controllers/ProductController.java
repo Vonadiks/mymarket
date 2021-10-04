@@ -2,17 +2,16 @@ package ru.geekbrains.my.market.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.my.market.dto.ProductDto;
+import ru.geekbrains.my.market.exceptions.ResourceNotFoundException;
 import ru.geekbrains.my.market.model.Category;
 import ru.geekbrains.my.market.model.Product;
-import ru.geekbrains.my.market.repositories.specifications.ProductSpecifications;
 import ru.geekbrains.my.market.services.CategoryService;
 import ru.geekbrains.my.market.services.ProductService;
-import ru.geekbrains.my.market.exceptions.ResourceNotFoundException;
 
-import java.math.BigDecimal;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,17 +43,24 @@ public class ProductController {
     @GetMapping
     public Page<ProductDto> findAll(
             @RequestParam(name = "p", defaultValue = "1") int pageIndex,
-            @RequestParam (name = "min_price", required = false) BigDecimal minPrice,
-            @RequestParam (name = "title", required = false) String title
+            @RequestParam MultiValueMap<String, String> params
+//            @RequestParam (name = "min_price", required = false) BigDecimal minPrice,
+//            @RequestParam (name = "max_price", required = false) BigDecimal maxPrice,
+//            @RequestParam (name = "title", required = false) String title
     ) {
-        Specification<Product> spec = Specification.where(null);
-        if (minPrice != null) {
-            spec = spec.and(ProductSpecifications.priceGreaterOrEqualsThan(minPrice));
-        }
-        if (title != null) {
-            spec = spec.and(ProductSpecifications.titleLike(title));
-        }
-        return productService.findPage(pageIndex - 1, 5, spec).map(ProductDto::new);
+        //Specification<Product> productSpec = new BaseSpecification<Product>(minPrice, maxPrice, title).getProductSpecification();
+        return productService.findPage(pageIndex - 1, 10, params).map(ProductDto::new);
+//        Specification<Product> spec = Specification.where(null);
+//        if (minPrice != null ) {
+//            spec = spec.and(ProductSpecifications.priceGreaterOrEqualsThan(new BigDecimal(minPrice)));
+//        }
+//        if (maxPrice != null) {
+//            spec = spec.and(ProductSpecifications.priceLessOrEqualsThan(new BigDecimal(maxPrice)));
+//        }
+//        if (title != null) {
+//            spec = spec.and(ProductSpecifications.titleLike(title));
+//        }
+       // return productService.findPage(pageIndex - 1, 5, spec).map(ProductDto::new);
         //return productService.findPage(pageIndex - 1, 5);
     }
 
@@ -86,6 +92,11 @@ public class ProductController {
         Category category = categoryService.findByTitle(cTitle);
         product.setCategory(category);
         return new ProductDto(productService.save(product));
+    }
+
+    @PostMapping("/pack")
+    public void demoPack(@RequestParam Map<String, String> params) {
+        System.out.println(1);
     }
 
 

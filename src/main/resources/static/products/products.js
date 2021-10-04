@@ -6,7 +6,10 @@ angular.module('app').controller('productsController', function ($scope, $http, 
                     url: contextPath + '/api/v1/products',
                     method: 'GET',
                     params: {
-                    'p': pageIndex
+                    'p': pageIndex,
+                    min_price: $scope.filter ? $scope.filter.min_price : null,
+                    max_price: $scope.filter ? $scope.filter.max_price : null,
+                    title: $scope.filter ? $scope.filter.title : null
                     }
                 }).then(function (response) {
                     $scope.productsPage = response.data;
@@ -16,7 +19,7 @@ angular.module('app').controller('productsController', function ($scope, $http, 
             };
     $scope.addToCart = function(productId) {
                          $http({
-                                url: contextPath + '/api/v1/cart/add/' + productId,
+                                url: contextPath + '/api/v1/cart/' + $localStorage.guestCartUuid + '/add/' + productId,
                                 method: 'GET',
                                 params: {}
                          }).then(function (response) {

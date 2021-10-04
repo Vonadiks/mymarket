@@ -1,4 +1,25 @@
 <div>
+    <form novalidate ng-submit="loadPage()">
+        <div class="form-group col-md-6">
+            <label for="filterMinPrice">Фильтр по минимальной цене</label>
+            <input class="form-control" type="text" ng-model="filter.min_price" id="filterMinPrice">
+        </div>
+        <p></p>
+        <div class="form-group col-md-6">
+            <label for="filterMaxPrice">Фильтр по максимальной цене</label>
+            <input class="form-control" type="text" ng-model="filter.max_price" id="filterMaxPrice">
+        </div>
+        <p></p>
+        <div class="form-group col-md-6">
+            <label for="filterTitle">Фильтр по названию</label>
+            <input class="form-control" type="text" ng-model="filter.title" id="filterTitle">
+        </div>
+        <p></p>
+        <div>
+            <button class="btn btn-primary" type="submit">Применить фильтр</button>
+
+        </div>
+    </form>
     <table class="table">
         <thead>
         <tr>
@@ -26,4 +47,5 @@
             </li>
         </ul>
     </nav>
+
 </div>
